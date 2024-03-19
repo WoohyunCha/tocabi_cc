@@ -1,5 +1,8 @@
 #include "cc.h"
 
+int main(){
+    torch::zeros(2);
+}
 using namespace TOCABI;
 
 CustomController::CustomController(RobotData &rd) : rd_(rd) //, wbc_(dc.wbc_)
@@ -29,297 +32,346 @@ Eigen::VectorQd CustomController::getControl()
     return ControlVal_;
 }
 
-void CustomController::loadNetwork()
-{
-    state_.setZero();
+// void CustomController::loadNetwork()
+// {
+//     state_.setZero();
+//     rl_action_.setZero();
+
+
+//     string cur_path = "/home/kim/tocabi_ws/src/tocabi_cc/";
+
+//     if (is_on_robot_)
+//     {
+//         cur_path = "/home/dyros/catkin_ws/src/tocabi_cc/";
+//     }
+//     std::ifstream file[14];
+//     file[0].open(cur_path+"weight/mlp_extractor_policy_net_0_weight.txt", std::ios::in);
+//     file[1].open(cur_path+"weight/mlp_extractor_policy_net_0_bias.txt", std::ios::in);
+//     file[2].open(cur_path+"weight/mlp_extractor_policy_net_2_weight.txt", std::ios::in);
+//     file[3].open(cur_path+"weight/mlp_extractor_policy_net_2_bias.txt", std::ios::in);
+//     file[4].open(cur_path+"weight/action_net_weight.txt", std::ios::in);
+//     file[5].open(cur_path+"weight/action_net_bias.txt", std::ios::in);
+//     file[6].open(cur_path+"weight/obs_mean_fixed.txt", std::ios::in);
+//     file[7].open(cur_path+"weight/obs_variance_fixed.txt", std::ios::in);
+//     file[8].open(cur_path+"weight/mlp_extractor_value_net_0_weight.txt", std::ios::in);
+//     file[9].open(cur_path+"weight/mlp_extractor_value_net_0_bias.txt", std::ios::in);
+//     file[10].open(cur_path+"weight/mlp_extractor_value_net_2_weight.txt", std::ios::in);
+//     file[11].open(cur_path+"weight/mlp_extractor_value_net_2_bias.txt", std::ios::in);
+//     file[12].open(cur_path+"weight/value_net_weight.txt", std::ios::in);
+//     file[13].open(cur_path+"weight/value_net_bias.txt", std::ios::in);
+
+
+//     if(!file[0].is_open())
+//     {
+//         std::cout<<"Can not find the weight file"<<std::endl;
+//     }
+
+//     float temp;
+//     int row = 0;
+//     int col = 0;
+
+//     while(!file[0].eof() && row != policy_net_w0_.rows())
+//     {
+//         file[0] >> temp;
+//         if(temp != '\n')
+//         {
+//             policy_net_w0_(row, col) = temp;
+//             col ++;
+//             if (col == policy_net_w0_.cols())
+//             {
+//                 col = 0;
+//                 row ++;
+//             }
+//         }
+//     }
+//     row = 0;
+//     col = 0;
+//     while(!file[1].eof() && row != policy_net_b0_.rows())
+//     {
+//         file[1] >> temp;
+//         if(temp != '\n')
+//         {
+//             policy_net_b0_(row, col) = temp;
+//             col ++;
+//             if (col == policy_net_b0_.cols())
+//             {
+//                 col = 0;
+//                 row ++;
+//             }
+//         }
+//     }
+//     row = 0;
+//     col = 0;
+//     while(!file[2].eof() && row != policy_net_w2_.rows())
+//     {
+//         file[2] >> temp;
+//         if(temp != '\n')
+//         {
+//             policy_net_w2_(row, col) = temp;
+//             col ++;
+//             if (col == policy_net_w2_.cols())
+//             {
+//                 col = 0;
+//                 row ++;
+//             }
+//         }
+//     }
+//     row = 0;
+//     col = 0;
+//     while(!file[3].eof() && row != policy_net_b2_.rows())
+//     {
+//         file[3] >> temp;
+//         if(temp != '\n')
+//         {
+//             policy_net_b2_(row, col) = temp;
+//             col ++;
+//             if (col == policy_net_b2_.cols())
+//             {
+//                 col = 0;
+//                 row ++;
+//             }
+//         }
+//     }
+//     row = 0;
+//     col = 0;
+//     while(!file[4].eof() && row != action_net_w_.rows())
+//     {
+//         file[4] >> temp;
+//         if(temp != '\n')
+//         {
+//             action_net_w_(row, col) = temp;
+//             col ++;
+//             if (col == action_net_w_.cols())
+//             {
+//                 col = 0;
+//                 row ++;
+//             }
+//         }
+//     }
+//     row = 0;
+//     col = 0;
+//     while(!file[5].eof() && row != action_net_b_.rows())
+//     {
+//         file[5] >> temp;
+//         if(temp != '\n')
+//         {
+//             action_net_b_(row, col) = temp;
+//             col ++;
+//             if (col == action_net_b_.cols())
+//             {
+//                 col = 0;
+//                 row ++;
+//             }
+//         }
+//     }
+//     row = 0;
+//     col = 0;
+//     while(!file[6].eof() && row != state_mean_.rows())
+//     {
+//         file[6] >> temp;
+//         if(temp != '\n')
+//         {
+//             state_mean_(row, col) = temp;
+//             col ++;
+//             if (col == state_mean_.cols())
+//             {
+//                 col = 0;
+//                 row ++;
+//             }
+//         }
+//     }
+//     row = 0;
+//     col = 0;
+//     while(!file[7].eof() && row != state_var_.rows())
+//     {
+//         file[7] >> temp;
+//         if(temp != '\n')
+//         {
+//             state_var_(row, col) = temp;
+//             col ++;
+//             if (col == state_var_.cols())
+//             {
+//                 col = 0;
+//                 row ++;
+//             }
+//         }
+//     }
+//     row = 0;
+//     col = 0;
+//     while(!file[8].eof() && row != value_net_w0_.rows())
+//     {
+//         file[8] >> temp;
+//         if(temp != '\n')
+//         {
+//             value_net_w0_(row, col) = temp;
+//             col ++;
+//             if (col == value_net_w0_.cols())
+//             {
+//                 col = 0;
+//                 row ++;
+//             }
+//         }
+//     }
+//     row = 0;
+//     col = 0;
+//     while(!file[9].eof() && row != value_net_b0_.rows())
+//     {
+//         file[9] >> temp;
+//         if(temp != '\n')
+//         {
+//             value_net_b0_(row, col) = temp;
+//             col ++;
+//             if (col == value_net_b0_.cols())
+//             {
+//                 col = 0;
+//                 row ++;
+//             }
+//         }
+//     }
+//     row = 0;
+//     col = 0;
+//     while(!file[10].eof() && row != value_net_w2_.rows())
+//     {
+//         file[10] >> temp;
+//         if(temp != '\n')
+//         {
+//             value_net_w2_(row, col) = temp;
+//             col ++;
+//             if (col == value_net_w2_.cols())
+//             {
+//                 col = 0;
+//                 row ++;
+//             }
+//         }
+//     }
+//     row = 0;
+//     col = 0;
+//     while(!file[11].eof() && row != value_net_b2_.rows())
+//     {
+//         file[11] >> temp;
+//         if(temp != '\n')
+//         {
+//             value_net_b2_(row, col) = temp;
+//             col ++;
+//             if (col == value_net_b2_.cols())
+//             {
+//                 col = 0;
+//                 row ++;
+//             }
+//         }
+//     }
+//     row = 0;
+//     col = 0;
+//     while(!file[12].eof() && row != value_net_w_.rows())
+//     {
+//         file[12] >> temp;
+//         if(temp != '\n')
+//         {
+//             value_net_w_(row, col) = temp;
+//             col ++;
+//             if (col == value_net_w_.cols())
+//             {
+//                 col = 0;
+//                 row ++;
+//             }
+//         }
+//     }
+//     row = 0;
+//     col = 0;
+//     while(!file[13].eof() && row != value_net_b_.rows())
+//     {
+//         file[13] >> temp;
+//         if(temp != '\n')
+//         {
+//             value_net_b_(row, col) = temp;
+//             col ++;
+//             if (col == value_net_b_.cols())
+//             {
+//                 col = 0;
+//                 row ++;
+//             }
+//         }
+//     }
+// }
+
+void CustomController::loadNetwork(){
+    std::string desc_package_path = ros::package::getPath("tocabi_cc");
+    std::string jitPtFilePath = desc_package_path + "/policy/policy_1.pt"; 
+    try {
+        module = torch::jit::load(jitPtFilePath);
+    }
+    catch (const c10::Error& e) {
+        std::cerr << "error loading the model\n" << e.what() << std::endl;
+    }
+    std::cout << "NEURAL NETWORK LOADED" << std::endl;
+    
+    while (observation_history.size() < history_length){
+        observation_history.push(torch::zeros({1, observation_size} , torch::kFloat));
+    }
+    this->rl_action_.resize(num_action, 1);
     rl_action_.setZero();
-
-
-    string cur_path = "/home/kim/tocabi_ws/src/tocabi_cc/";
-
-    if (is_on_robot_)
-    {
-        cur_path = "/home/dyros/catkin_ws/src/tocabi_cc/";
-    }
-    std::ifstream file[14];
-    file[0].open(cur_path+"weight/mlp_extractor_policy_net_0_weight.txt", std::ios::in);
-    file[1].open(cur_path+"weight/mlp_extractor_policy_net_0_bias.txt", std::ios::in);
-    file[2].open(cur_path+"weight/mlp_extractor_policy_net_2_weight.txt", std::ios::in);
-    file[3].open(cur_path+"weight/mlp_extractor_policy_net_2_bias.txt", std::ios::in);
-    file[4].open(cur_path+"weight/action_net_weight.txt", std::ios::in);
-    file[5].open(cur_path+"weight/action_net_bias.txt", std::ios::in);
-    file[6].open(cur_path+"weight/obs_mean_fixed.txt", std::ios::in);
-    file[7].open(cur_path+"weight/obs_variance_fixed.txt", std::ios::in);
-    file[8].open(cur_path+"weight/mlp_extractor_value_net_0_weight.txt", std::ios::in);
-    file[9].open(cur_path+"weight/mlp_extractor_value_net_0_bias.txt", std::ios::in);
-    file[10].open(cur_path+"weight/mlp_extractor_value_net_2_weight.txt", std::ios::in);
-    file[11].open(cur_path+"weight/mlp_extractor_value_net_2_bias.txt", std::ios::in);
-    file[12].open(cur_path+"weight/value_net_weight.txt", std::ios::in);
-    file[13].open(cur_path+"weight/value_net_bias.txt", std::ios::in);
-
-
-    if(!file[0].is_open())
-    {
-        std::cout<<"Can not find the weight file"<<std::endl;
-    }
-
-    float temp;
-    int row = 0;
-    int col = 0;
-
-    while(!file[0].eof() && row != policy_net_w0_.rows())
-    {
-        file[0] >> temp;
-        if(temp != '\n')
-        {
-            policy_net_w0_(row, col) = temp;
-            col ++;
-            if (col == policy_net_w0_.cols())
-            {
-                col = 0;
-                row ++;
-            }
-        }
-    }
-    row = 0;
-    col = 0;
-    while(!file[1].eof() && row != policy_net_b0_.rows())
-    {
-        file[1] >> temp;
-        if(temp != '\n')
-        {
-            policy_net_b0_(row, col) = temp;
-            col ++;
-            if (col == policy_net_b0_.cols())
-            {
-                col = 0;
-                row ++;
-            }
-        }
-    }
-    row = 0;
-    col = 0;
-    while(!file[2].eof() && row != policy_net_w2_.rows())
-    {
-        file[2] >> temp;
-        if(temp != '\n')
-        {
-            policy_net_w2_(row, col) = temp;
-            col ++;
-            if (col == policy_net_w2_.cols())
-            {
-                col = 0;
-                row ++;
-            }
-        }
-    }
-    row = 0;
-    col = 0;
-    while(!file[3].eof() && row != policy_net_b2_.rows())
-    {
-        file[3] >> temp;
-        if(temp != '\n')
-        {
-            policy_net_b2_(row, col) = temp;
-            col ++;
-            if (col == policy_net_b2_.cols())
-            {
-                col = 0;
-                row ++;
-            }
-        }
-    }
-    row = 0;
-    col = 0;
-    while(!file[4].eof() && row != action_net_w_.rows())
-    {
-        file[4] >> temp;
-        if(temp != '\n')
-        {
-            action_net_w_(row, col) = temp;
-            col ++;
-            if (col == action_net_w_.cols())
-            {
-                col = 0;
-                row ++;
-            }
-        }
-    }
-    row = 0;
-    col = 0;
-    while(!file[5].eof() && row != action_net_b_.rows())
-    {
-        file[5] >> temp;
-        if(temp != '\n')
-        {
-            action_net_b_(row, col) = temp;
-            col ++;
-            if (col == action_net_b_.cols())
-            {
-                col = 0;
-                row ++;
-            }
-        }
-    }
-    row = 0;
-    col = 0;
-    while(!file[6].eof() && row != state_mean_.rows())
-    {
-        file[6] >> temp;
-        if(temp != '\n')
-        {
-            state_mean_(row, col) = temp;
-            col ++;
-            if (col == state_mean_.cols())
-            {
-                col = 0;
-                row ++;
-            }
-        }
-    }
-    row = 0;
-    col = 0;
-    while(!file[7].eof() && row != state_var_.rows())
-    {
-        file[7] >> temp;
-        if(temp != '\n')
-        {
-            state_var_(row, col) = temp;
-            col ++;
-            if (col == state_var_.cols())
-            {
-                col = 0;
-                row ++;
-            }
-        }
-    }
-    row = 0;
-    col = 0;
-    while(!file[8].eof() && row != value_net_w0_.rows())
-    {
-        file[8] >> temp;
-        if(temp != '\n')
-        {
-            value_net_w0_(row, col) = temp;
-            col ++;
-            if (col == value_net_w0_.cols())
-            {
-                col = 0;
-                row ++;
-            }
-        }
-    }
-    row = 0;
-    col = 0;
-    while(!file[9].eof() && row != value_net_b0_.rows())
-    {
-        file[9] >> temp;
-        if(temp != '\n')
-        {
-            value_net_b0_(row, col) = temp;
-            col ++;
-            if (col == value_net_b0_.cols())
-            {
-                col = 0;
-                row ++;
-            }
-        }
-    }
-    row = 0;
-    col = 0;
-    while(!file[10].eof() && row != value_net_w2_.rows())
-    {
-        file[10] >> temp;
-        if(temp != '\n')
-        {
-            value_net_w2_(row, col) = temp;
-            col ++;
-            if (col == value_net_w2_.cols())
-            {
-                col = 0;
-                row ++;
-            }
-        }
-    }
-    row = 0;
-    col = 0;
-    while(!file[11].eof() && row != value_net_b2_.rows())
-    {
-        file[11] >> temp;
-        if(temp != '\n')
-        {
-            value_net_b2_(row, col) = temp;
-            col ++;
-            if (col == value_net_b2_.cols())
-            {
-                col = 0;
-                row ++;
-            }
-        }
-    }
-    row = 0;
-    col = 0;
-    while(!file[12].eof() && row != value_net_w_.rows())
-    {
-        file[12] >> temp;
-        if(temp != '\n')
-        {
-            value_net_w_(row, col) = temp;
-            col ++;
-            if (col == value_net_w_.cols())
-            {
-                col = 0;
-                row ++;
-            }
-        }
-    }
-    row = 0;
-    col = 0;
-    while(!file[13].eof() && row != value_net_b_.rows())
-    {
-        file[13] >> temp;
-        if(temp != '\n')
-        {
-            value_net_b_(row, col) = temp;
-            col ++;
-            if (col == value_net_b_.cols())
-            {
-                col = 0;
-                row ++;
-            }
-        }
-    }
 }
 
-void CustomController::initVariable()
-{    
-    policy_net_w0_.resize(num_hidden, num_state);
-    policy_net_b0_.resize(num_hidden, 1);
-    policy_net_w2_.resize(num_hidden, num_hidden);
-    policy_net_b2_.resize(num_hidden, 1);
-    action_net_w_.resize(num_action, num_hidden);
-    action_net_b_.resize(num_action, 1);
-    hidden_layer1_.resize(num_hidden, 1);
-    hidden_layer2_.resize(num_hidden, 1);
-    rl_action_.resize(num_action, 1);
+// void CustomController::initVariable()
+// {    
+//     policy_net_w0_.resize(num_hidden, num_state);
+//     policy_net_b0_.resize(num_hidden, 1);
+//     policy_net_w2_.resize(num_hidden, num_hidden);
+//     policy_net_b2_.resize(num_hidden, 1);
+//     action_net_w_.resize(num_action, num_hidden);
+//     action_net_b_.resize(num_action, 1);
+//     hidden_layer1_.resize(num_hidden, 1);
+//     hidden_layer2_.resize(num_hidden, 1);
+//     rl_action_.resize(num_action, 1);
 
-    value_net_w0_.resize(num_hidden, num_state);
-    value_net_b0_.resize(num_hidden, 1);
-    value_net_w2_.resize(num_hidden, num_hidden);
-    value_net_b2_.resize(num_hidden, 1);
-    value_net_w_.resize(1, num_hidden);
-    value_net_b_.resize(1, 1);
-    value_hidden_layer1_.resize(num_hidden, 1);
-    value_hidden_layer2_.resize(num_hidden, 1);
+//     value_net_w0_.resize(num_hidden, num_state);
+//     value_net_b0_.resize(num_hidden, 1);
+//     value_net_w2_.resize(num_hidden, num_hidden);
+//     value_net_b2_.resize(num_hidden, 1);
+//     value_net_w_.resize(1, num_hidden);
+//     value_net_b_.resize(1, 1);
+//     value_hidden_layer1_.resize(num_hidden, 1);
+//     value_hidden_layer2_.resize(num_hidden, 1);
     
-    state_cur_.resize(num_cur_state, 1);
-    state_.resize(num_state, 1);
-    state_buffer_.resize(num_cur_state*num_state_skip*num_state_hist, 1);
-    state_mean_.resize(num_cur_state, 1);
-    state_var_.resize(num_cur_state, 1);
+//     state_cur_.resize(num_cur_state, 1);
+//     state_.resize(num_state, 1);
+//     state_buffer_.resize(num_cur_state*num_state_skip*num_state_hist, 1);
+//     state_mean_.resize(num_cur_state, 1);
+//     state_var_.resize(num_cur_state, 1);
 
-    q_dot_lpf_.setZero();
+//     q_dot_lpf_.setZero();
 
+//     torque_bound_ << 333, 232, 263, 289, 222, 166,
+//                     333, 232, 263, 289, 222, 166,
+//                     303, 303, 303, 
+//                     64, 64, 64, 64, 23, 23, 10, 10,
+//                     10, 10,
+//                     64, 64, 64, 64, 23, 23, 10, 10;  
+                    
+//     q_init_ << 0.0, 0.0, -0.24, 0.6, -0.36, 0.0,
+//                 0.0, 0.0, -0.24, 0.6, -0.36, 0.0,
+//                 0.0, 0.0, 0.0,
+//                 0.3, 0.3, 1.5, -1.27, -1.0, 0.0, -1.0, 0.0,
+//                 0.0, 0.0,
+//                 -0.3, -0.3, -1.5, 1.27, 1.0, 0.0, 1.0, 0.0;
+
+//     kp_.setZero();
+//     kv_.setZero();
+//     kp_.diagonal() <<   2000.0, 5000.0, 4000.0, 3700.0, 3200.0, 3200.0,
+//                         2000.0, 5000.0, 4000.0, 3700.0, 3200.0, 3200.0,
+//                         6000.0, 10000.0, 10000.0,
+//                         400.0, 1000.0, 400.0, 400.0, 400.0, 400.0, 100.0, 100.0,
+//                         100.0, 100.0,
+//                         400.0, 1000.0, 400.0, 400.0, 400.0, 400.0, 100.0, 100.0;
+//     kv_.diagonal() << 15.0, 50.0, 20.0, 25.0, 24.0, 24.0,
+//                         15.0, 50.0, 20.0, 25.0, 24.0, 24.0,
+//                         200.0, 100.0, 100.0,
+//                         10.0, 28.0, 10.0, 10.0, 10.0, 10.0, 3.0, 3.0,
+//                         2.0, 2.0,
+//                         10.0, 28.0, 10.0, 10.0, 10.0, 10.0, 3.0, 3.0;
+// }
+
+void CustomController::initVariable(){
     torque_bound_ << 333, 232, 263, 289, 222, 166,
                     333, 232, 263, 289, 222, 166,
                     303, 303, 303, 
@@ -332,22 +384,8 @@ void CustomController::initVariable()
                 0.0, 0.0, 0.0,
                 0.3, 0.3, 1.5, -1.27, -1.0, 0.0, -1.0, 0.0,
                 0.0, 0.0,
-                -0.3, -0.3, -1.5, 1.27, 1.0, 0.0, 1.0, 0.0;
+                -0.3, -0.3, -1.5, 1.27, 1.0, 0.0, 1.0, 0.0;       
 
-    kp_.setZero();
-    kv_.setZero();
-    kp_.diagonal() <<   2000.0, 5000.0, 4000.0, 3700.0, 3200.0, 3200.0,
-                        2000.0, 5000.0, 4000.0, 3700.0, 3200.0, 3200.0,
-                        6000.0, 10000.0, 10000.0,
-                        400.0, 1000.0, 400.0, 400.0, 400.0, 400.0, 100.0, 100.0,
-                        100.0, 100.0,
-                        400.0, 1000.0, 400.0, 400.0, 400.0, 400.0, 100.0, 100.0;
-    kv_.diagonal() << 15.0, 50.0, 20.0, 25.0, 24.0, 24.0,
-                        15.0, 50.0, 20.0, 25.0, 24.0, 24.0,
-                        200.0, 100.0, 100.0,
-                        10.0, 28.0, 10.0, 10.0, 10.0, 10.0, 3.0, 3.0,
-                        2.0, 2.0,
-                        10.0, 28.0, 10.0, 10.0, 10.0, 10.0, 3.0, 3.0;
 }
 
 Eigen::Vector3d CustomController::mat2euler(Eigen::Matrix3d mat)
@@ -409,137 +447,174 @@ void CustomController::processNoise()
     time_pre_ = time_cur_;
 }
 
-void CustomController::processObservation()
-{
-    int data_idx = 0;
+// void CustomController::processObservation()
+// {
+//     int data_idx = 0;
+//     // Base quat
+//     Eigen::Quaterniond q;
+//     q.x() = rd_cc_.q_virtual_(3);
+//     q.y() = rd_cc_.q_virtual_(4);
+//     q.z() = rd_cc_.q_virtual_(5);
+//     q.w() = rd_cc_.q_virtual_(MODEL_DOF_QVIRTUAL-1);    
+//     // Base euler
+//     euler_angle_ = DyrosMath::rot2Euler_tf(q.toRotationMatrix());
 
+//     // Add euler to state
+//     state_cur_(data_idx) = euler_angle_(0);
+//     data_idx++;
+
+//     state_cur_(data_idx) = euler_angle_(1);
+//     data_idx++;
+
+//     state_cur_(data_idx) = euler_angle_(2);
+//     data_idx++;
+
+
+//     for (int i = 0; i < num_actuator_action; i++)
+//     {
+//         state_cur_(data_idx) = q_noise_(i); // q_noise is the noise added q
+//         data_idx++;
+//     }
+
+//     for (int i = 0; i < num_actuator_action; i++)
+//     {
+//         if (is_on_robot_)
+//         {
+//             state_cur_(data_idx) = q_vel_noise_(i);
+//         }
+//         else
+//         {
+//             state_cur_(data_idx) = q_vel_noise_(i); //rd_cc_.q_dot_virtual_(i+6); //q_vel_noise_(i);
+//         }
+//         data_idx++;
+//     }
+
+//     float squat_duration = 1.7995;
+//     phase_ = std::fmod((rd_cc_.control_time_us_-start_time_)/1e6 + action_dt_accumulate_, squat_duration) / squat_duration;
+
+//     state_cur_(data_idx) = sin(2*M_PI*phase_);
+//     data_idx++;
+//     state_cur_(data_idx) = cos(2*M_PI*phase_);
+//     data_idx++;
+
+//     state_cur_(data_idx) = 0.2;//target_vel_x_;
+//     data_idx++;
+
+//     state_cur_(data_idx) = 0.0;//target_vel_y_;
+//     data_idx++;
+
+//     state_cur_(data_idx) = rd_cc_.LF_FT(2);
+//     data_idx++;
+
+//     state_cur_(data_idx) = rd_cc_.RF_FT(2);
+//     data_idx++;
+
+//     state_cur_(data_idx) = rd_cc_.LF_FT(3);
+//     data_idx++;
+
+//     state_cur_(data_idx) = rd_cc_.RF_FT(3);
+//     data_idx++;
+
+//     state_cur_(data_idx) = rd_cc_.LF_FT(4);
+//     data_idx++;
+
+//     state_cur_(data_idx) = rd_cc_.RF_FT(4);
+//     data_idx++;
+
+//     for (int i = 0; i <num_actuator_action; i++) 
+//     {
+//         state_cur_(data_idx) = DyrosMath::minmax_cut(rl_action_(i), -1.0, 1.0);
+//         data_idx++;
+//     }
+//     state_cur_(data_idx) = DyrosMath::minmax_cut(rl_action_(num_actuator_action), 0.0, 1.0);
+//     data_idx++;
+    
+//     state_buffer_.block(0, 0, num_cur_state*(num_state_skip*num_state_hist-1),1) = state_buffer_.block(num_cur_state, 0, num_cur_state*(num_state_skip*num_state_hist-1),1);
+//     state_buffer_.block(num_cur_state*(num_state_skip*num_state_hist-1), 0, num_cur_state,1) = (state_cur_ - state_mean_).array() / state_var_.cwiseSqrt().array();
+
+//     // Internal State First
+//     for (int i = 0; i < num_state_hist; i++)
+//     {
+//         state_.block(num_cur_internal_state*i, 0, num_cur_internal_state, 1) = state_buffer_.block(num_cur_state*(num_state_skip*(i+1)-1), 0, num_cur_internal_state, 1);
+//     }
+//     // Action History Second
+//     for (int i = 0; i < num_state_hist-1; i++)
+//     {
+//         state_.block(num_state_hist*num_cur_internal_state + num_action*i, 0, num_action, 1) = state_buffer_.block(num_cur_state*(num_state_skip*(i+1)) + num_cur_internal_state, 0, num_action, 1);
+//     }
+
+// }
+
+void CustomController::processObservation(){
+    // Base quat
     Eigen::Quaterniond q;
     q.x() = rd_cc_.q_virtual_(3);
     q.y() = rd_cc_.q_virtual_(4);
     q.z() = rd_cc_.q_virtual_(5);
     q.w() = rd_cc_.q_virtual_(MODEL_DOF_QVIRTUAL-1);    
-
+    // Base euler
     euler_angle_ = DyrosMath::rot2Euler_tf(q.toRotationMatrix());
-
-    state_cur_(data_idx) = euler_angle_(0);
-    data_idx++;
-
-    state_cur_(data_idx) = euler_angle_(1);
-    data_idx++;
-
-    state_cur_(data_idx) = euler_angle_(2);
-    data_idx++;
-
-
-    for (int i = 0; i < num_actuator_action; i++)
-    {
-        state_cur_(data_idx) = q_noise_(i);
-        data_idx++;
-    }
-
-    for (int i = 0; i < num_actuator_action; i++)
-    {
-        if (is_on_robot_)
-        {
-            state_cur_(data_idx) = q_vel_noise_(i);
-        }
-        else
-        {
-            state_cur_(data_idx) = q_vel_noise_(i); //rd_cc_.q_dot_virtual_(i+6); //q_vel_noise_(i);
-        }
-        data_idx++;
-    }
-
-    float squat_duration = 1.7995;
-    phase_ = std::fmod((rd_cc_.control_time_us_-start_time_)/1e6 + action_dt_accumulate_, squat_duration) / squat_duration;
-
-    state_cur_(data_idx) = sin(2*M_PI*phase_);
-    data_idx++;
-    state_cur_(data_idx) = cos(2*M_PI*phase_);
-    data_idx++;
-
-    state_cur_(data_idx) = 0.2;//target_vel_x_;
-    data_idx++;
-
-    state_cur_(data_idx) = 0.0;//target_vel_y_;
-    data_idx++;
-
-    state_cur_(data_idx) = rd_cc_.LF_FT(2);
-    data_idx++;
-
-    state_cur_(data_idx) = rd_cc_.RF_FT(2);
-    data_idx++;
-
-    state_cur_(data_idx) = rd_cc_.LF_FT(3);
-    data_idx++;
-
-    state_cur_(data_idx) = rd_cc_.RF_FT(3);
-    data_idx++;
-
-    state_cur_(data_idx) = rd_cc_.LF_FT(4);
-    data_idx++;
-
-    state_cur_(data_idx) = rd_cc_.RF_FT(4);
-    data_idx++;
-
-    for (int i = 0; i <num_actuator_action; i++) 
-    {
-        state_cur_(data_idx) = DyrosMath::minmax_cut(rl_action_(i), -1.0, 1.0);
-        data_idx++;
-    }
-    state_cur_(data_idx) = DyrosMath::minmax_cut(rl_action_(num_actuator_action), 0.0, 1.0);
-    data_idx++;
     
-    state_buffer_.block(0, 0, num_cur_state*(num_state_skip*num_state_hist-1),1) = state_buffer_.block(num_cur_state, 0, num_cur_state*(num_state_skip*num_state_hist-1),1);
-    state_buffer_.block(num_cur_state*(num_state_skip*num_state_hist-1), 0, num_cur_state,1) = (state_cur_ - state_mean_).array() / state_var_.cwiseSqrt().array();
+    Eigen::Vector3f projected_gravity_ = quat_rotate_inverse(q, this->gravity).cast<float>();
+    Eigen::Vector3f commands_ = (commands.array() * Vector3d(lin_vel_scale, lin_vel_scale, ang_vel_scale).array()).cast<float>();
+    Eigen::Vector12f dof_pos_ = ((q_noise_.segment<this->num_action>(0) - this->q_init_.segment<this->num_action>(0)) * dof_pos_scale).cast<float>(); 
+    Eigen::Vector12f dof_vel_ = (q_vel_noise_.segment<this->num_action>(0) * dof_vel_scale).cast<float>();
+    Eigen::Vector12f action_ = (this->rl_action_).cast<float>();    
 
-    // Internal State First
-    for (int i = 0; i < num_state_hist; i++)
-    {
-        state_.block(num_cur_internal_state*i, 0, num_cur_internal_state, 1) = state_buffer_.block(num_cur_state*(num_state_skip*(i+1)-1), 0, num_cur_internal_state, 1);
-    }
-    // Action History Second
-    for (int i = 0; i < num_state_hist-1; i++)
-    {
-        state_.block(num_state_hist*num_cur_internal_state + num_action*i, 0, num_action, 1) = state_buffer_.block(num_cur_state*(num_state_skip*(i+1)) + num_cur_internal_state, 0, num_action, 1);
-    }
-
+    torch::Tensor projected_gravity = torch::from_blob(projected_gravity_.data(), {1, 3});
+    torch::Tensor commands = torch::from_blob(commands_.data(), {1, 3});
+    torch::Tensor dof_pos = torch::from_blob(dof_pos_.data(), {1, this->num_action});
+    torch::Tensor dof_vel = torch::from_blob(dof_vel_.data(), {1, this->num_action});
+    torch::Tensor action = torch::from_blob(action_.data(), {1, this->num_action});
+    // std::vector<torch::Tensor> tensor_list = {base_ang_vel, projected_gravity, commands, dof_pos, dof_vel, action};
+    std::vector<torch::Tensor> tensor_list = {projected_gravity, commands, dof_pos, dof_vel, action};
+    
+    // this->observation = torch::zeros({1, this->observation_size});
+    this->observation = torch::clamp(torch::cat(tensor_list, 1), -this->clip_observations, this->clip_observations) ;
+    // std::cout << "observation: " << this->observation << std::endl;
+    // std::cout << "observation: " << this->observation.sizes() << std::endl;
+    observation_history.push(this->observation);
 }
 
-void CustomController::feedforwardPolicy()
-{
-    hidden_layer1_ = policy_net_w0_ * state_ + policy_net_b0_;
-    for (int i = 0; i < num_hidden; i++) 
-    {
-        if (hidden_layer1_(i) < 0)
-            hidden_layer1_(i) = 0.0;
-    }
+// void CustomController::feedforwardPolicy()
+// {
+//     hidden_layer1_ = policy_net_w0_ * state_ + policy_net_b0_;
+//     for (int i = 0; i < num_hidden; i++) 
+//     {
+//         if (hidden_layer1_(i) < 0)
+//             hidden_layer1_(i) = 0.0;
+//     }
 
-    hidden_layer2_ = policy_net_w2_ * hidden_layer1_ + policy_net_b2_;
-    for (int i = 0; i < num_hidden; i++) 
-    {
-        if (hidden_layer2_(i) < 0)
-            hidden_layer2_(i) = 0.0;
-    }
+//     hidden_layer2_ = policy_net_w2_ * hidden_layer1_ + policy_net_b2_;
+//     for (int i = 0; i < num_hidden; i++) 
+//     {
+//         if (hidden_layer2_(i) < 0)
+//             hidden_layer2_(i) = 0.0;
+//     }
 
-    rl_action_ = action_net_w_ * hidden_layer2_ + action_net_b_;
+//     rl_action_ = action_net_w_ * hidden_layer2_ + action_net_b_;
 
-    value_hidden_layer1_ = value_net_w0_ * state_ + value_net_b0_;
-    for (int i = 0; i < num_hidden; i++) 
-    {
-        if (value_hidden_layer1_(i) < 0)
-            value_hidden_layer1_(i) = 0.0;
-    }
+//     value_hidden_layer1_ = value_net_w0_ * state_ + value_net_b0_;
+//     for (int i = 0; i < num_hidden; i++) 
+//     {
+//         if (value_hidden_layer1_(i) < 0)
+//             value_hidden_layer1_(i) = 0.0;
+//     }
 
-    value_hidden_layer2_ = value_net_w2_ * value_hidden_layer1_ + value_net_b2_;
-    for (int i = 0; i < num_hidden; i++) 
-    {
-        if (value_hidden_layer2_(i) < 0)
-            value_hidden_layer2_(i) = 0.0;
-    }
+//     value_hidden_layer2_ = value_net_w2_ * value_hidden_layer1_ + value_net_b2_;
+//     for (int i = 0; i < num_hidden; i++) 
+//     {
+//         if (value_hidden_layer2_(i) < 0)
+//             value_hidden_layer2_(i) = 0.0;
+//     }
 
-    value_ = (value_net_w_ * value_hidden_layer2_ + value_net_b_)(0);
+//     value_ = (value_net_w_ * value_hidden_layer2_ + value_net_b_)(0);
     
+// }
+
+void CustomController::feedforwardPolicy(){
+    this->action = this->action_scale *  torch::clamp(module.forward({queue_to_tensor(this->observation_history)}).toTensor(), -clip_actions, clip_actions);
+    this->rl_action_ = tensor_to_Eigen<Eigen::VectorXd>(this->action);
 }
 
 void CustomController::computeSlow()

@@ -1,14 +1,21 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.0.2)
 project(tocabi_cc)
 
 add_compile_options(-std=c++17 -Ofast)
 
+list(APPEND CMAKE_PREFIX_PATH "$ENV{HOME}/tocabi_ws/src/libtorch/")
+
+
 find_package(catkin REQUIRED
 roscpp
+roslib
 tocabi_lib
 tocabi_msgs
 eigen_conversions
 )
+
+find_package(Torch REQUIRED)
+
 
 catkin_package(
   INCLUDE_DIRS include
@@ -23,17 +30,23 @@ catkin_package(
 
 include_directories(
     include
+    "$ENV{HOME}/tocabi_ws/src/libtorch/include"
+    "$ENV{HOME}/tocabi_ws/src/libtorch/include/torch/csrc/api/include"
     ${catkin_INCLUDE_DIRS}
+
 )
+
 
 add_library(${PROJECT_NAME}
   src/cc.cpp
 )
 add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
+
 target_link_libraries(${PROJECT_NAME}
   ${catkin_LIBRARIES}
-)
+  ${TORCH_LIBRARIES}
+  )
 
 install(TARGETS ${PROJECT_NAME}
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
